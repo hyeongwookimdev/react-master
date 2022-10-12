@@ -4,8 +4,8 @@ import "styled-components";
 // 2. styled-components의 테마 정의를 확장하는 것
 declare module "styled-components" {
   export interface DefaultTheme {
-    textColor: string | undefined;
     bgColor: string;
-    accentColor: string;
+    boardColor: string;
+    cardColor: string;
   }
 }
