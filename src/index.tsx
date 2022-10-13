@@ -64,7 +64,7 @@ table {
 
 body {
   font-family: 'Source Sans Pro', sans-serif;
-  background-color: ${(props) => props.theme.bgColor};
+  background:linear-gradient(135deg,#218c74,#33d9b2);;
   color: "#000";
   line-height: 1.2;
 }
