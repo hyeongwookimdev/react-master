@@ -64,7 +64,7 @@ table {
 
 body {
   font-family: 'Source Sans Pro', sans-serif;
-  
+  background: linear-gradient(135deg, rgba(2,3,4,1), rgba(123, 123, 123, 1));
   color: "#000";
   line-height: 1.2;
 }
