@@ -3,5 +3,16 @@ import "styled-components";
 
 // 2. styled-components의 테마 정의를 확장하는 것
 declare module "styled-components" {
-  export interface DefaultTheme {}
+  export interface DefaultTheme {
+    red: string;
+    black: {
+      veryDark: string;
+      darker: string;
+      lighter: string;
+    };
+    white: {
+      darker: string;
+      lighter: string;
+    };
+  }
 }
