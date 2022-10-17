@@ -342,7 +342,7 @@ function TV() {
                 key={indexTopTv}
               >
                 {topRatedTvData?.results
-                  .slice(1, 11)
+                  .slice(0, 10)
                   .slice(offset * indexTopTv, offset * indexTopTv + offset)
                   .map((video: ITv, indexNum: number) => (
                     <Box

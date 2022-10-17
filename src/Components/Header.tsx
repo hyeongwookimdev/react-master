@@ -60,6 +60,7 @@ const Search = styled.form`
   svg {
     height: 25px;
   }
+  cursor: pointer;
 `;
 
 const Circle = styled(motion.span)`
@@ -141,7 +142,7 @@ function Header() {
 
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
-  const onValid = (data: IForm) => {
+  const onSearch = (data: IForm) => {
     history.push(`/search?keyword=${data.keyword}`);
   };
 
@@ -173,7 +174,7 @@ function Header() {
         </Items>
       </Col>
       <Col>
-        <Search onSubmit={handleSubmit(onValid)}>
+        <Search onSubmit={handleSubmit(onSearch)}>
           <motion.svg
             onClick={toggleSearch}
             animate={{ x: searchOpen ? -180 : 0 }}

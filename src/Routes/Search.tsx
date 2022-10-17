@@ -42,7 +42,6 @@ const Slider = styled.div`
   margin-left: 60px;
   margin-bottom: 100px;
 `;
-
 const SliderTitle = styled.h3`
   font-size: 30px;
   font-weight: 600;
@@ -216,9 +215,9 @@ const offset = 6;
 function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
-  const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["searchResult", "keyword"],
-    () => getSearch(keyword ? keyword : "")
+
+  const { data, isLoading } = useQuery<IGetMoviesResult>(["keyword"], () =>
+    getSearch(keyword ? keyword : "")
   );
 
   const history = useHistory();
@@ -267,7 +266,6 @@ function Search() {
                 key={index}
               >
                 {data?.results
-
                   .slice(offset * index, offset * index + offset)
                   .map((movie: IMovie) => (
                     <Box

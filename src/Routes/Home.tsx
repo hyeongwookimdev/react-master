@@ -49,7 +49,6 @@ const Slider = styled.div`
   margin-left: 60px;
   margin-bottom: 100px;
 `;
-
 const SliderTitle = styled.h3`
   font-size: 30px;
   font-weight: 600;
@@ -91,7 +90,6 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
     transform-origin: center right;
   }
 `;
-
 const RatingNum = styled(motion.div)`
   font-size: 100px;
   bottom: -102px;
