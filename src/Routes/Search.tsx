@@ -288,15 +288,15 @@ function Search() {
                   ))}
               </Row>
             </AnimatePresence>
+            <SliderBtn
+              onClick={increaseIndex}
+              variants={btnVariants}
+              whileHover={"hover"}
+              initial={"start"}
+            >
+              {"➡️"}
+            </SliderBtn>
           </Slider>
-          <SliderBtn
-            onClick={increaseIndex}
-            variants={btnVariants}
-            whileHover={"hover"}
-            initial={"start"}
-          >
-            {"➡️"}
-          </SliderBtn>
 
           <AnimatePresence>
             {bigMovieMatch ? (

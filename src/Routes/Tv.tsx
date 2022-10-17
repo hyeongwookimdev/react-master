@@ -212,6 +212,7 @@ const boxVariants = {
       delay: 0.5,
       duration: 0.3,
     },
+    zIndex: 99,
   },
 };
 const infoVariants = {
@@ -436,7 +437,7 @@ function TV() {
             </SliderBtn>
           </Slider>
           <Slider>
-            <SliderTitle>지금 뜨는 콘텐츠</SliderTitle>
+            <SliderTitle>방영 중인 시리즈</SliderTitle>
             <AnimatePresence initial={false} onExitComplete={toggleLeavingUpTv}>
               <Row
                 variants={rowVariants}

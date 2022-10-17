@@ -208,6 +208,7 @@ const boxVariants = {
       delay: 0.5,
       duration: 0.3,
     },
+    zIndex: 99,
   },
 };
 const infoVariants = {
@@ -439,7 +440,7 @@ function Home() {
                 key={indexUp}
               >
                 {upCommingData?.results
-
+                  .slice(1, 19)
                   .slice(offset * indexUp, offset * indexUp + offset)
                   .map((movie: IMovie) => (
                     <Box
