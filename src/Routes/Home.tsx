@@ -3,7 +3,13 @@ import { motion, AnimatePresence, useScroll } from "framer-motion";
 import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult } from "../api";
+import {
+  getPopMovies,
+  getTopMovies,
+  getUpMovies,
+  IGetMoviesResult,
+  IMovie,
+} from "../api";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -43,6 +49,7 @@ const Overview = styled.p`
 const Slider = styled.div`
   top: -100px;
   position: relative;
+  height: 250px;
 `;
 
 const Row = styled(motion.div)`
@@ -163,17 +170,27 @@ function Home() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useScroll();
-  const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getMovies
-  );
+
+  const useMultipleQuery = () => {
+    const topRated = useQuery(["topRated"], getTopMovies);
+    const popular = useQuery(["popular"], getPopMovies);
+    const upComming = useQuery(["upComming"], getUpMovies);
+    return [topRated, popular, upComming];
+  };
+
+  const [
+    { isLoading: loadingTopRated, data: topRatedData },
+    { isLoading: loadingPopular, data: popularData },
+    { isLoading: loadingUpComming, data: upCommingData },
+  ] = useMultipleQuery();
+
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const increaseIndex = () => {
-    if (data) {
+    if (topRatedData) {
       if (leaving) return;
       toggleLeaving();
-      const totalMovies = data.results.length - 1;
+      const totalMovies = topRatedData.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offset) - 1;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
@@ -185,22 +202,36 @@ function Home() {
   };
 
   const onOverlayClick = () => history.push("/");
-  const clickedMovie =
+  const clickedTopMovie =
     bigMovieMatch?.params.movieId &&
-    data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
+    topRatedData?.results.find(
+      (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
+    );
+  const clickedPopMovie =
+    bigMovieMatch?.params.movieId &&
+    popularData?.results.find(
+      (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
+    );
+  const clickedUpMovie =
+    bigMovieMatch?.params.movieId &&
+    upCommingData?.results.find(
+      (movie: IMovie) => movie.id === +bigMovieMatch.params.movieId
+    );
 
   return (
     <Wrapper>
-      {isLoading ? (
+      {loadingTopRated && loadingPopular && loadingUpComming ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
           <Banner
             onClick={increaseIndex}
-            bgphoto={makeImagePath(data?.results[1].backdrop_path || "")}
+            bgphoto={makeImagePath(
+              topRatedData?.results[0].backdrop_path || ""
+            )}
           >
-            <Title>{data?.results[1].title}</Title>
-            <Overview>{data?.results[1].overview}</Overview>
+            <Title>{topRatedData?.results[0].title}</Title>
+            <Overview>{topRatedData?.results[0].overview}</Overview>
           </Banner>
           <Slider>
             <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
@@ -212,10 +243,74 @@ function Home() {
                 transition={{ type: "tween", duration: 0.7 }}
                 key={index}
               >
-                {data?.results
-                  .slice(1)
+                {topRatedData?.results
+
                   .slice(offset * index, offset * index + offset)
-                  .map((movie) => (
+                  .map((movie: IMovie) => (
+                    <Box
+                      layoutId={movie.id + ""}
+                      key={movie.id}
+                      variants={boxVariants}
+                      onClick={() => onBoxClicked(movie.id)}
+                      whileHover="hover"
+                      initial="normal"
+                      transition={{ type: "tween" }}
+                      bgphoto={makeImagePath(movie.backdrop_path, "w500")}
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
+                  ))}
+              </Row>
+            </AnimatePresence>
+          </Slider>
+          <Slider>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <Row
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 0.7 }}
+                key={index}
+              >
+                {popularData?.results
+
+                  .slice(offset * index, offset * index + offset)
+                  .map((movie: IMovie) => (
+                    <Box
+                      layoutId={movie.id + ""}
+                      key={movie.id}
+                      variants={boxVariants}
+                      onClick={() => onBoxClicked(movie.id)}
+                      whileHover="hover"
+                      initial="normal"
+                      transition={{ type: "tween" }}
+                      bgphoto={makeImagePath(movie.backdrop_path, "w500")}
+                    >
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
+                  ))}
+              </Row>
+            </AnimatePresence>
+          </Slider>
+          <Slider>
+            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+              <Row
+                variants={rowVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ type: "tween", duration: 0.7 }}
+                key={index}
+              >
+                {upCommingData?.results
+
+                  .slice(offset * index, offset * index + offset)
+                  .map((movie: IMovie) => (
                     <Box
                       layoutId={movie.id + ""}
                       key={movie.id}
@@ -246,18 +341,46 @@ function Home() {
                   style={{ top: scrollY.get() + 100 }}
                   layoutId={bigMovieMatch.params.movieId}
                 >
-                  {clickedMovie && (
+                  {clickedTopMovie && (
                     <>
                       <BigCover
                         style={{
                           backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
-                            clickedMovie.backdrop_path,
+                            clickedTopMovie.backdrop_path,
                             "w500"
                           )})`,
                         }}
                       />
-                      <BigTitle>{clickedMovie.title}</BigTitle>
-                      <BigOverview>{clickedMovie.overview}</BigOverview>
+                      <BigTitle>{clickedTopMovie.title}</BigTitle>
+                      <BigOverview>{clickedTopMovie.overview}</BigOverview>
+                    </>
+                  )}
+                  {clickedPopMovie && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedPopMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedPopMovie.title}</BigTitle>
+                      <BigOverview>{clickedPopMovie.overview}</BigOverview>
+                    </>
+                  )}
+                  {clickedUpMovie && (
+                    <>
+                      <BigCover
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedUpMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <BigTitle>{clickedUpMovie.title}</BigTitle>
+                      <BigOverview>{clickedUpMovie.overview}</BigOverview>
                     </>
                   )}
                 </BigMovie>
