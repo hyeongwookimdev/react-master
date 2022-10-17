@@ -86,13 +86,9 @@ export function getAirTv() {
   ).then((response) => response.json());
 }
 
-// https://api.themoviedb.org/3/tv/top_rated?api_key=f346520ba452706de7caceee9bc65f64&language=ko&page=1
-// https://api.themoviedb.org/3/tv/popular?api_key=f346520ba452706de7caceee9bc65f64&language=ko&page=1
-// https://api.themoviedb.org/3/tv/airing_today?api_key=f346520ba452706de7caceee9bc65f64&language=ko&page=1
-
 export function getSearch(keyword: string) {
   return fetch(
-    `https://api.themoviedb.org/3/search/multi?api_key=f346520ba452706de7caceee9bc65f64&language=en-US&query=${keyword}&page=1`
+    `https://api.themoviedb.org/3/search/movie?api_key=f346520ba452706de7caceee9bc65f64&language=ko&query=${keyword}&page=1&include_adult=false&region=kr`
   ).then((response) => response.json());
 }
 
