@@ -9,10 +9,10 @@ function App() {
     <Router>
       <Header />
       <Switch>
-        <Route path="/tv">
+        <Route path={["/tv", "/tv/videos/:videoID"]}>
           <TV />
         </Route>
-        <Route path="/search">
+        <Route path={["/search", "/search/:movieId"]}>
           <Search />
         </Route>
         <Route path={["/", "/movies/:movieID"]}>

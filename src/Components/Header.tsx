@@ -15,6 +15,7 @@ const Nav = styled(motion.nav)`
   font-size: 14px;
   padding: 20px 60px;
   color: white;
+  z-index: 99;
 `;
 
 const Col = styled.div`
@@ -141,7 +142,6 @@ function Header() {
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    console.log(data);
     history.push(`/search?keyword=${data.keyword}`);
   };
 
