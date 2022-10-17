@@ -262,7 +262,7 @@ function TV() {
       if (leavingTopTv) return;
       toggleLeavingTopTv();
       const totalMovies = topRatedTvData.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 2;
       setIndexTopTv((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
@@ -342,7 +342,7 @@ function TV() {
                 key={indexTopTv}
               >
                 {topRatedTvData?.results
-
+                  .slice(1, 11)
                   .slice(offset * indexTopTv, offset * indexTopTv + offset)
                   .map((video: ITv, indexNum: number) => (
                     <Box
