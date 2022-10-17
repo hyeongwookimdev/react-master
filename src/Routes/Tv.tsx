@@ -47,13 +47,12 @@ const Overview = styled.p`
   width: 50%;
 `;
 const Slider = styled.div`
-  top: -100px;
+  top: -150px;
   position: relative;
   height: 500px;
   margin-left: 60px;
   margin-bottom: 100px;
 `;
-
 const SliderTitle = styled.h3`
   font-size: 30px;
   font-weight: 600;
@@ -85,6 +84,7 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-position: center center;
   height: 500px;
   font-size: 66px;
+  position: relative;
   cursor: pointer;
   border-radius: 7px;
   &:first-child {
@@ -93,6 +93,16 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   &:last-child {
     transform-origin: center right;
   }
+`;
+const RatingNum = styled(motion.div)`
+  font-size: 100px;
+  bottom: -102px;
+  left: -70px;
+  font-size: 275px;
+  position: absolute;
+  color: ${(props) => props.theme.black.veryDark};
+  text-shadow: -3px 0px #e5e5e5, 0px 3px #e5e5e5, 3px 0px #e5e5e5,
+    0px -3px #e5e5e5;
 `;
 const Info = styled(motion.div)`
   padding: 10px;
@@ -334,7 +344,7 @@ function TV() {
                 {topRatedTvData?.results
 
                   .slice(offset * indexTopTv, offset * indexTopTv + offset)
-                  .map((video: ITv) => (
+                  .map((video: ITv, indexNum: number) => (
                     <Box
                       layoutId={video.id + ""}
                       key={video.id}
@@ -344,13 +354,27 @@ function TV() {
                       initial="normal"
                       transition={{ type: "tween" }}
                       bgphoto={makeImagePath(video.poster_path, "w500")}
+                      style={{ marginLeft: "60px" }}
                     >
-                      <Info variants={infoVariants}>
+                      <Info
+                        variants={infoVariants}
+                        style={{
+                          top: 0,
+                          background:
+                            "linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+                          justifyContent: "flex-start",
+                        }}
+                      >
                         <h4>{video.name}</h4>
                         <h5>{video.original_name}</h5>
                         <h6>{video.first_air_date.split("-")[0]}</h6>
                         <h6>⭐️ {video.vote_average}</h6>
                       </Info>
+                      {indexTopTv === 0 ? (
+                        <RatingNum>{indexNum + 1}</RatingNum>
+                      ) : (
+                        <RatingNum>{indexNum + 7}</RatingNum>
+                      )}
                     </Box>
                   ))}
               </Row>

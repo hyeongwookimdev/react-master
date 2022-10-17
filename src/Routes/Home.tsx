@@ -43,7 +43,7 @@ const Overview = styled.p`
   width: 50%;
 `;
 const Slider = styled.div`
-  top: -100px;
+  top: -150px;
   position: relative;
   height: 500px;
   margin-left: 60px;
@@ -83,12 +83,24 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   font-size: 66px;
   cursor: pointer;
   border-radius: 7px;
+  position: relative;
   &:first-child {
     transform-origin: center left;
   }
   &:last-child {
     transform-origin: center right;
   }
+`;
+
+const RatingNum = styled(motion.div)`
+  font-size: 100px;
+  bottom: -102px;
+  left: -70px;
+  font-size: 275px;
+  position: absolute;
+  color: ${(props) => props.theme.black.veryDark};
+  text-shadow: -3px 0px #e5e5e5, 0px 3px #e5e5e5, 3px 0px #e5e5e5,
+    0px -3px #e5e5e5;
 `;
 const Info = styled(motion.div)`
   padding: 10px;
@@ -209,6 +221,9 @@ const infoVariants = {
       duration: 0.3,
     },
   },
+  nover: {
+    opacity: 0,
+  },
 };
 const btnVariants = {
   start: {
@@ -246,7 +261,7 @@ function Home() {
       if (leaving) return;
       toggleLeaving();
       const totalMovies = topRatedData.results.length - 1;
-      const maxIndex = Math.floor(totalMovies / offset) - 1;
+      const maxIndex = Math.floor(totalMovies / offset) - 2;
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
@@ -306,11 +321,11 @@ function Home() {
         <>
           <Banner
             bgphoto={makeImagePath(
-              topRatedData?.results[0].backdrop_path || ""
+              topRatedData?.results[1].backdrop_path || ""
             )}
           >
-            <Title>{topRatedData?.results[0].title}</Title>
-            <Overview>{topRatedData?.results[0].overview}</Overview>
+            <Title>{topRatedData?.results[1].title}</Title>
+            <Overview>{topRatedData?.results[1].overview}</Overview>
           </Banner>
           <Slider>
             <SliderTitle>오늘 대한민국의 TOP 10 영화</SliderTitle>
@@ -324,9 +339,9 @@ function Home() {
                 key={index}
               >
                 {topRatedData?.results
-
+                  .slice(1, 11)
                   .slice(offset * index, offset * index + offset)
-                  .map((movie: IMovie) => (
+                  .map((movie: IMovie, indexNum: number) => (
                     <Box
                       layoutId={movie.id + ""}
                       key={movie.id}
@@ -336,13 +351,27 @@ function Home() {
                       initial="normal"
                       transition={{ type: "tween" }}
                       bgphoto={makeImagePath(movie.poster_path, "w500")}
+                      style={{ marginLeft: "60px" }}
                     >
-                      <Info variants={infoVariants}>
+                      <Info
+                        variants={infoVariants}
+                        style={{
+                          top: 0,
+                          background:
+                            "linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0))",
+                          justifyContent: "flex-start",
+                        }}
+                      >
                         <h4>{movie.title}</h4>
                         <h5>{movie.original_title}</h5>
                         <h6>{movie.release_date.split("-")[0]}</h6>
                         <h6>⭐️ {movie.vote_average}</h6>
                       </Info>
+                      {index === 0 ? (
+                        <RatingNum>{indexNum + 1}</RatingNum>
+                      ) : (
+                        <RatingNum>{indexNum + 7}</RatingNum>
+                      )}
                     </Box>
                   ))}
               </Row>
@@ -383,6 +412,9 @@ function Home() {
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>
+                        <h5>{movie.original_title}</h5>
+                        <h6>{movie.release_date.split("-")[0]}</h6>
+                        <h6>⭐️ {movie.vote_average}</h6>
                       </Info>
                     </Box>
                   ))}
@@ -424,6 +456,9 @@ function Home() {
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>
+                        <h5>{movie.original_title}</h5>
+                        <h6>{movie.release_date.split("-")[0]}</h6>
+                        <h6>⭐️ {movie.vote_average}</h6>
                       </Info>
                     </Box>
                   ))}
